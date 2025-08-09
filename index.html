@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Neptun Pear — Tienda de Maquillaje</title>
+  <meta name="description" content="Neptun Pear — Tienda online de maquillaje con estética pastel, morado y rosado." />
+  <style>
+    :root{
+      --bg-1: #f6e7ff; /* very light lavender */
+      --bg-2: #ffeef8; /* very light pink */
+      --primary-1: #9b6bff; /* pastel purple */
+      --primary-2: #ff8fc4; /* pastel pink */
+      --glass: rgba(255,255,255,0.55);
+      --card-shadow: 0 8px 30px rgba(95,57,154,0.12);
+      --radius: 18px;
+      --accent: rgba(255,255,255,0.18);
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+    }
+
+    /* Reset */
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body,#app{height:100%}
+    body{
+      background: linear-gradient(135deg,var(--bg-1), var(--bg-2));
+      -webkit-font-smoothing:antialiased;
+      color:#2b2140;
+      line-height:1.4;
+      padding:24px;
+    }
+
+    /* Page container */
+    .container{max-width:1160px;margin:0 auto}
+
+    header{
+      display:flex;align-items:center;justify-content:space-between;padding:18px 12px 28px;
+    }
+
+    .brand{
+      display:flex;align-items:center;gap:12px;font-weight:700;font-size:20px;color:#2b2140;
+    }
+
+    .logo-circle{
+      width:52px;height:52px;border-radius:12px;background:linear-gradient(135deg,var(--primary-1),var(--primary-2));
+      display:flex;align-items:center;justify-content:center;color:white;font-weight:800;box-shadow:0 6px 18px rgba(155,107,255,0.25);
+    }
+
+    nav{display:flex;gap:12px;align-items:center}
+    .nav-btn{background:transparent;border:0;padding:8px 12px;border-radius:12px;font-weight:600;cursor:pointer}
+
+    .hero{
+      position:relative;border-radius:20px;overflow:hidden;padding:36px;margin-bottom:28px;background:linear-gradient(160deg, rgba(255,255,255,0.18), rgba(255,255,255,0.06));backdrop-filter: blur(6px);
+      box-shadow:var(--card-shadow);
+      min-height:360px;display:flex;gap:24px;align-items:center;
+    }
+
+    .hero-left{flex:1}
+    .hero-right{width:420px;display:flex;flex-direction:column;gap:12px}
+
+    h1{font-size:34px;letter-spacing:-0.6px;margin-bottom:10px}
+    p.lead{opacity:0.9}
+
+    /* Hearts and sparkles behind content */
+    .bg-graphics{position:absolute;inset:0;pointer-events:none;z-index:0}
+
+    /* heart shapes using pseudo elements */
+    .heart{
+      position:absolute;width:120px;height:110px;transform:rotate(-30deg);opacity:0.75;border-radius:20px;background:radial-gradient(circle at 30% 30%, rgba(255,255,255,0.6), transparent 20%), linear-gradient(135deg, rgba(255,140,200,0.9), rgba(155,86,255,0.9));
+      filter:blur(6px);
+      animation: float 8s ease-in-out infinite;
+    }
+    .heart.small{width:64px;height:60px;opacity:0.85;filter:blur(3px);animation-duration:6s}
+    .heart.ghost{background:linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.02));border:1px solid rgba(255,255,255,0.18);filter:none}
+
+    @keyframes float{0%{transform:translateY(0) rotate(-10deg)}50%{transform:translateY(-16px) rotate(8deg)}100%{transform:translateY(0) rotate(-10deg)}}
+
+    /* sparkle shapes */
+    .sparkle{position:absolute;width:12px;height:12px;background:linear-gradient(180deg, #fff, rgba(255,255,255,0.3));transform:rotate(25deg);border-radius:3px;box-shadow:0 6px 18px rgba(0,0,0,0.06);opacity:0.95}
+    .sparkle::after{content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.9)}
+
+    /* Product grid */
+    .products{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.65), rgba(255,255,255,0.42));border-radius:16px;padding:14px;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,0.18);box-shadow:0 8px 28px rgba(114,76,165,0.06)}
+    .product-img{width:100%;height:180px;border-radius:12px;object-fit:cover;border:1px solid rgba(255,255,255,0.12)}
+    .product-meta{padding-top:10px}
+    .price{font-weight:800}
+    .add-btn{margin-top:10px;padding:8px 10px;border-radius:12px;border:0;background:linear-gradient(90deg,var(--primary-1),var(--primary-2));color:white;font-weight:700;cursor:pointer}
+
+    /* Cart */
+    .cart-toggle{position:relative}
+    .cart-bubble{position:absolute;right:-8px;top:-8px;background:#ff6fa8;color:white;border-radius:999px;padding:4px 8px;font-size:12px;font-weight:700}
+
+    /* Footer / small */
+    footer{margin-top:26px;opacity:0.9;font-size:13px;text-align:center}
+
+    /* Responsive */
+    @media (max-width:880px){
+      .hero{flex-direction:column}
+      .hero-right{width:100%}
+    }
+
+    /* subtle floating animation for product cards */
+    .card{transform:translateY(0);transition:transform .32s ease, box-shadow .32s ease}
+    .card:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(114,76,165,0.12)}
+
+    /* simple modal */
+    .modal{position:fixed;inset:0;background:rgba(30,15,45,0.52);display:flex;align-items:center;justify-content:center;padding:24px;z-index:9999;opacity:0;pointer-events:none;transition:opacity .18s ease}
+    .modal.open{opacity:1;pointer-events:all}
+    .modal-card{background:white;border-radius:14px;padding:18px;max-width:520px;width:100%}
+
+  </style>
+</head>
+<body>
+  <div id="app" class="container">
+    <header>
+      <div class="brand">
+        <div class="logo-circle">NP</div>
+        <div>
+          <div>Neptun Pear</div>
+          <div style="font-size:12px;opacity:0.7;font-weight:600">Maquillaje · Estética Pastel</div>
+        </div>
+      </div>
+
+      <nav>
+        <button class="nav-btn">Inicio</button>
+        <button class="nav-btn">Productos</button>
+        <button class="nav-btn">Contacto</button>
+        <div style="position:relative">
+          <button id="cartBtn" class="nav-btn cart-toggle">🛒 Carrito</button>
+          <div id="cartBubble" class="cart-bubble" style="display:none">0</div>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="bg-graphics" aria-hidden="true">
+          <!-- decorative hearts and sparkles -->
+          <div class="heart" style="left:6%;top:12%;width:160px;height:140px;transform:rotate(-28deg);filter:blur(8px);opacity:0.9"></div>
+          <div class="heart small" style="left:72%;top:6%;background:linear-gradient(135deg, rgba(255,200,230,0.9), rgba(180,140,255,0.9));"></div>
+          <div class="heart ghost" style="left:50%;top:46%;width:240px;height:200px;opacity:0.25"></div>
+
+          <div class="sparkle" style="left:34%;top:24%;transform:scale(1.6)"></div>
+          <div class="sparkle" style="left:22%;top:64%;transform:scale(1.1)"></div>
+          <div class="sparkle" style="left:78%;top:52%;transform:scale(1.4)"></div>
+          <div class="sparkle" style="left:12%;top:42%;transform:scale(0.9)"></div>
+        </div>
+
+        <div class="hero-left">
+          <h1>Neptun Pear — Belleza pastel, brillo sutil</h1>
+          <p class="lead">Descubre tonos suaves y productos seleccionados para crear un look etéreo. Envíos a todo Colombia.</p>
+
+          <div style="margin-top:18px;display:flex;gap:12px">
+            <button class="add-btn" id="shopAll">Ver productos</button>
+            <button class="nav-btn" id="openAbout">Sobre nosotros</button>
+          </div>
+
+          <div style="margin-top:16px;font-size:13px;opacity:0.86">Pagos: tarjeta, PSE y transferencia. Atención al cliente por WhatsApp.</div>
+        </div>
+
+        <div class="hero-right">
+          <div style="background:linear-gradient(160deg, rgba(255,255,255,0.7), rgba(255,255,255,0.45));padding:12px;border-radius:12px"> 
+            <div style="font-weight:700;margin-bottom:8px">Producto destacado</div>
+            <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='600' height='400'><rect rx='16' width='100%' height='100%' fill='%23fbeaf3'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%239b6bff' font-size='28' font-family='Arial'>Iluminador "Luna"</text></svg>" alt="Iluminador Luna" class="product-img"/>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px">
+              <div>
+                <div style="font-weight:700">Iluminador "Luna"</div>
+                <div style="font-size:13px;opacity:0.8">Brillo sutil, acabado perlado</div>
+              </div>
+              <div style="text-align:right">
+                <div class="price">$45.000</div>
+                <button class="add-btn" data-id="p-0">Agregar</button>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top:12px;padding:10px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.55), rgba(255,255,255,0.2));">
+            <div style="font-weight:700">Suscríbete</div>
+            <div style="margin-top:8px;font-size:13px;opacity:0.85">Recibe 10% en tu primera compra</div>
+            <div style="margin-top:8px;display:flex;gap:8px">
+              <input id="email" placeholder="tu@correo.com" style="flex:1;padding:8px;border-radius:10px;border:1px solid rgba(0,0,0,0.06)" />
+              <button class="add-btn" id="subscribe">OK</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 style="margin-bottom:12px">Productos</h2>
+        <div class="products" id="products"></div>
+      </section>
+
+    </main>
+
+    <footer>
+      © Neptun Pear · Hecho con cariño · Diseño: estética pastel
+    </footer>
+
+    <!-- modal -->
+    <div id="modal" class="modal" role="dialog" aria-hidden="true">
+      <div class="modal-card" id="modalCard">
+        <div id="modalContent"></div>
+        <div style="margin-top:12px;text-align:right">
+          <button class="nav-btn" id="closeModal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // Sample product data
+    const PRODUCTS = [
+      {id:'p-1',name:'Paleta Pastel',price:75000,desc:'Sombras con tonos morado y rosa, acabado mate y perlado',img:'https://images.unsplash.com/photo-1581579183091-0b6b2b7b8b17?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=placeholder'},
+      {id:'p-2',name:'Rubor Rosado',price:36000,desc:'Rubor en crema, acabado natural',img:'https://images.unsplash.com/photo-1594041687987-28f3b623c6b6?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=placeholder'},
+      {id:'p-3',name:'Labial Perlado',price:42000,desc:'Labial con brillo ligero',img:'https://images.unsplash.com/photo-1618292556405-1d8b6c2d4f9e?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=placeholder'},
+      {id:'p-4',name:'Iluminador Lumin',price:45000,desc:'Polvo iluminador para un brillo sutil',img:'https://images.unsplash.com/photo-1600180758890-4b3b8bcb9f5d?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=placeholder'},
+      {id:'p-5',name:'Brocha Diffuse',price:25000,desc:'Brocha suave para difuminar sombras',img:'https://images.unsplash.com/photo-1585238342029-5b6f4a9c0f7b?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=placeholder'}
+    ];
+
+    // Minimal cart logic
+    const cart = {};
+
+    function formatCOP(n){
+      return new Intl.NumberFormat('es-CO',{style:'currency',currency:'COP',maximumFractionDigits:0}).format(n);
+    }
+
+    function renderProducts(){
+      const root = document.getElementById('products');
+      root.innerHTML = '';
+      PRODUCTS.forEach((p, idx) =>{
+        const card = document.createElement('div');card.className='card';
+        card.innerHTML = `
+          <img class="product-img" src="${p.img}" alt="${p.name}" />
+          <div class="product-meta">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div style="font-weight:700">${p.name}</div>
+              <div class="price">${formatCOP(p.price)}</div>
+            </div>
+            <div style="margin-top:6px;font-size:13px;opacity:0.85">${p.desc}</div>
+            <div style="display:flex;gap:8px;align-items:center;margin-top:10px">
+              <button class="add-btn" data-id="${p.id}">Agregar</button>
+              <button class="nav-btn" data-view="${p.id}">Ver</button>
+            </div>
+          </div>
+        `;
+        root.appendChild(card);
+      });
+    }
+
+    function updateCartBubble(){
+      const bubble = document.getElementById('cartBubble');
+      const totalItems = Object.values(cart).reduce((s,q)=>s+q,0);
+      if(totalItems>0){bubble.style.display='block';bubble.textContent=totalItems}else{bubble.style.display='none'}
+    }
+
+    function addToCart(id){
+      cart[id] = (cart[id]||0)+1;updateCartBubble();
+    }
+
+    // modal helpers
+    function openModal(html){
+      const modal = document.getElementById('modal');
+      document.getElementById('modalContent').innerHTML = html;modal.classList.add('open');modal.setAttribute('aria-hidden','false');
+    }
+    function closeModal(){document.getElementById('modal').classList.remove('open');document.getElementById('modal').setAttribute('aria-hidden','true');}
+
+    // show cart details
+    function showCart(){
+      const items = Object.keys(cart);
+      if(items.length===0){openModal('<div><strong>Tu carrito está vacío</strong><div style="margin-top:8px;opacity:0.85">Agrega productos para empezar.</div></div>');return}
+      let total=0;let rows='';
+      items.forEach(id=>{
+        const prod = PRODUCTS.find(p=>p.id===id);
+        const qty = cart[id];
+        const sum = prod.price*qty;total+=sum;
+        rows += `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px dashed rgba(0,0,0,0.06)"><div><div style='font-weight:700'>${prod.name}</div><div style='font-size:13px;opacity:0.8'>${formatCOP(prod.price)} × ${qty}</div></div><div style='text-align:right'><div style='font-weight:800'>${formatCOP(sum)}</div><div style='margin-top:6px'><button class='nav-btn' data-remove='${id}'>-</button><button class='nav-btn' data-add='${id}'>+</button></div></div></div>`;
+      });
+      const html = `<div><h3>Tu carrito</h3><div style='margin-top:8px'>${rows}</div><div style='display:flex;justify-content:space-between;align-items:center;margin-top:12px;font-weight:800'>Total: ${formatCOP(total)} <button class='add-btn' id='checkoutBtn' style='margin-left:12px'>Pagar</button></div></div>`;
+      openModal(html);
+    }
+
+    // event delegation for modal actions
+    document.addEventListener('click', (e)=>{
+      if(e.target.matches('[data-id]')){
+        addToCart(e.target.getAttribute('data-id'));
+        // quick feedback
+        e.target.textContent='✔ Agregado';setTimeout(()=>e.target.textContent='Agregar',900);
+      }
+
+      if(e.target.matches('[data-view]')){
+        const id = e.target.getAttribute('data-view');
+        const prod = PRODUCTS.find(p=>p.id===id);
+        openModal(`<div><h3>${prod.name}</h3><div style='margin-top:6px'>${prod.desc}</div><div style='margin-top:8px;font-weight:800'>${formatCOP(prod.price)}</div><div style='margin-top:10px'><button class='add-btn' data-id='${prod.id}'>Agregar al carrito</button></div></div>`);
+      }
+
+      if(e.target.id==='cartBtn') showCart();
+      if(e.target.id==='closeModal') closeModal();
+      if(e.target.id==='checkoutBtn'){
+        // very simple checkout
+        closeModal();
+        alert('Gracias por tu compra! (Simulación) — total procesado.');
+        // clear cart
+        for(const k in cart) delete cart[k]; updateCartBubble();
+      }
+
+      if(e.target.matches('[data-remove]')){
+        const id = e.target.getAttribute('data-remove');
+        if(cart[id]>1) cart[id]--;
+        else delete cart[id];
+        closeModal();setTimeout(showCart,100);
+        updateCartBubble();
+      }
+      if(e.target.matches('[data-add]')){
+        const id = e.target.getAttribute('data-add');
+        cart[id] = (cart[id]||0)+1;closeModal();setTimeout(showCart,100);updateCartBubble();
+      }
+    });
+
+    // small UI bindings
+    document.getElementById('shopAll').addEventListener('click', ()=>{window.scrollTo({top:document.querySelector('#products').offsetTop-20,behavior:'smooth'})});
+    document.getElementById('openAbout').addEventListener('click', ()=>{
+      openModal('<div><h3>Sobre Neptun Pear</h3><div style="margin-top:8px;opacity:0.9">Neptun Pear nace con la idea de ofrecer cosmética en una paleta de colores suave y femenina, inspirada en la estética pastel y urbana. Producto seleccionado con énfasis en acabados sutiles y buena relación calidad-precio.</div></div>');
+    });
+
+    document.getElementById('subscribe').addEventListener('click', ()=>{
+      const email = document.getElementById('email').value.trim();
+      if(!email||!email.includes('@')){alert('Por favor ingresa un correo válido.');return}
+      alert('Gracias por suscribirte — recibirás un 10% en tu primer pedido.');document.getElementById('email').value='';
+    });
+
+    // init
+    renderProducts();updateCartBubble();
+
+  </script>
+</body>
+</html>
